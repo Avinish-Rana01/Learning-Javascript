@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontend Developer — Interview Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #e7ebe5;
+    --paper-line: #c9d0c5;
+    --card: #faf9f4;
+    --card-border: #d8d2c0;
+    --ink: #202b2b;
+    --ink-soft: #4b5757;
+    --teal: #2f6f6b;
+    --teal-deep: #1f4d4a;
+    --stamp: #b23a2e;
+    --core-bg: #202b2b;
+    --core-fg: #f2efe4;
+    --likely-bg: #e9dcb5;
+    --likely-fg: #6b4e1e;
+    --bonus-bg: #dfe4e6;
+    --bonus-fg: #45525a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .manual {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* ---------- Header / spec-sheet title block ---------- */
+  .doc-header {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 22px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    box-shadow: 0 1px 0 rgba(32,43,43,0.05);
+  }
+  .doc-header .title-block { max-width: 640px; }
+  .doc-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin: 0 0 6px;
+  }
+  .doc-header h1 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 26px;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .doc-header p.sub {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+  }
+  .doc-meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: right;
+    border-left: 1px dashed var(--card-border);
+    padding-left: 16px;
+  }
+  .doc-meta div { margin-bottom: 3px; }
+  .doc-meta .count { font-size: 18px; color: var(--ink); font-weight: 600; }
+
+  /* ---------- JD callout ---------- */
+  .jd-note {
+    margin-top: 16px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--stamp);
+    border-radius: 3px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .jd-note strong { color: var(--stamp); }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .search-wrap {
+    flex: 1 1 260px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 14px 10px 34px;
+    border: 1px solid var(--card-border);
+    border-radius: 3px;
+    background: var(--card);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .search-wrap input:focus {
+    outline: 2px solid var(--teal);
+    outline-offset: 1px;
+  }
+  .search-wrap::before {
+    content: "⌕";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+  .btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--teal); color: var(--teal-deep); }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .tabs {
+    position: sticky;
+    top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tab-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-left: 5px solid var(--cat-color, var(--teal));
+    border-radius: 3px;
+    padding: 9px 12px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .tab-btn .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border-radius: 10px;
+    padding: 1px 7px;
+  }
+  .tab-btn[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .tab-btn[aria-pressed="true"] .n { background: rgba(255,255,255,0.15); color: var(--paper); }
+
+  /* ---------- Cards ---------- */
+  .cards { display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .card.reviewed { border-color: var(--teal); }
+
+  .card-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 12px;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-family: "IBM Plex Sans", sans-serif;
+    color: var(--ink);
+  }
+  .card-header:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+  .card-id {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .card-q { font-size: 14.5px; font-weight: 500; }
+  .tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .tag-core { background: var(--core-bg); color: var(--core-fg); }
+  .tag-likely { background: var(--likely-bg); color: var(--likely-fg); }
+  .tag-bonus { background: var(--bonus-bg); color: var(--bonus-fg); }
+  .chevron {
+    font-size: 18px;
+    color: var(--ink-soft);
+    transition: transform 0.15s ease;
+  }
+  .card.open .chevron { transform: rotate(90deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 16px 18px 16px;
+    border-top: 1px dashed var(--card-border);
+    margin: 0 16px;
+  }
+  .card.open .card-body { display: block; padding-top: 14px; }
+  .card-body p { margin: 0 0 12px; font-size: 14px; color: var(--ink); }
+
+  pre.code-block {
+    background: var(--ink);
+    color: #dce9e6;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    padding: 12px 14px;
+    border-radius: 3px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0 0 12px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .stamp-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--ink-soft);
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .card.reviewed .stamp-btn {
+    border-color: var(--teal);
+    color: var(--teal-deep);
+  }
+
+  .stamp {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: 3px double var(--stamp);
+    color: var(--stamp);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: center;
+    transform: rotate(-11deg);
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  .card.reviewed .stamp { display: flex; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  footer.manual-footer {
+    margin-top: 26px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 780px) {
+    .layout { grid-template-columns: 1fr; }
+    .tabs {
+      position: static;
+      flex-direction: row;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn { flex: 0 0 auto; white-space: nowrap; }
+    .doc-header { align-items: flex-start; }
+    .doc-meta { text-align: left; border-left: none; padding-left: 0; }
+    .card-header { grid-template-columns: auto 1fr auto; }
+    .card-id { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="manual">
+
+  <div class="doc-header">
+    <div class="title-block">
+      <p class="doc-eyebrow">Interview Field Manual · Rev. 08 Jul 2026</p>
+      <h1>Frontend Developer — Prep Binder</h1>
+      <p class="sub">Built from your JD: HTML5 / CSS3 / JS, responsive &amp; UI-UX basics, REST API integration, Visual Studio / VS Code — plus the Windows-app angle it calls out.</p>
+    </div>
+    <div class="doc-meta">
+      <div>Doc No. FE-INT-2026</div>
+      <div>Questions: <span class="count" id="total-count">0</span></div>
+      <div id="reviewed-count">0 reviewed</div>
+    </div>
+  </div>
+
+  <div class="jd-note">
+    <strong>Heads-up on this JD:</strong> it mentions "Web and Windows application" UI twice — unusual for a pure React/JS listing. That most likely means the company also maintains a legacy Windows desktop product (WinForms/WPF) alongside their web app, and wants one frontend team across both. It's worth asking directly what portion of the role is web vs. desktop. See the <strong>Web vs Windows UI</strong> tab for how to answer honestly if it comes up.
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search questions and answers…" aria-label="Search questions">
+    </div>
+    <button class="btn" id="expand-all">Expand all</button>
+    <button class="btn" id="collapse-all">Collapse all</button>
+    <button class="btn" id="reset-progress">Reset progress</button>
+  </div>
+
+  <div class="layout">
+    <nav class="tabs" id="tabs" aria-label="Question categories"></nav>
+    <main class="cards" id="cards"></main>
+  </div>
+
+  <footer class="manual-footer">Tailored to the JD you pasted — good luck with it, Avinish.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const CATEGORIES = [
+    { id: "all", label: "All questions", color: "#202b2b" },
+    { id: "html", label: "HTML5", color: "#2f6f6b" },
+    { id: "css", label: "CSS3 & Responsive", color: "#3b6e8f" },
+    { id: "js", label: "JavaScript", color: "#8a5a2e" },
+    { id: "uiux", label: "UI/UX Principles", color: "#6b4e9e" },
+    { id: "api", label: "REST APIs", color: "#2f6f6b" },
+    { id: "integration", label: "Integration & Workflow", color: "#3b6e8f" },
+    { id: "tools", label: "Dev Tools", color: "#8a5a2e" },
+    { id: "windows", label: "Web vs Windows UI", color: "#b23a2e" },
+    { id: "behavioral", label: "Behavioral & Projects", color: "#6b4e9e" }
+  ];
+
+  const RAW = [
+    // ---------------- HTML5 ----------------
+    { cat: "html", tag: "CORE", q: "What's new in HTML5 compared to earlier versions?",
+      a: "HTML5 introduced semantic tags like header, nav, main, section, article, and footer, native audio and video support without plugins, the canvas and SVG APIs for graphics, new form input types such as email, date, and number, and client-side storage through localStorage and sessionStorage." },
+    { cat: "html", tag: "CORE", q: "Why use semantic elements instead of divs for everything?",
+      a: "Semantic tags describe meaning, not just appearance. Screen readers and search engines use that meaning to navigate and rank pages, and other developers can scan the structure of your markup at a glance instead of decoding a div soup." },
+    { cat: "html", tag: "LIKELY", q: "What's the difference between <section>, <article>, and <div>?",
+      a: "article is content that could stand alone and be redistributed, like a blog post or product card. section groups related content under a heading, like a chapter. div carries no semantic meaning at all — it's a plain container you reach for only when nothing more specific fits." },
+    { cat: "html", tag: "LIKELY", q: "What does the DOCTYPE declaration do?",
+      a: "<!DOCTYPE html> tells the browser to render the page in standards mode rather than quirks mode, so the CSS box model and layout behave predictably across browsers." },
+    { cat: "html", tag: "CORE", q: "What's the difference between block-level and inline elements?",
+      a: "Block elements (div, p, section) start on a new line and take the full available width — you can set width, height, and vertical margins on them. Inline elements (span, a, strong) flow within a line of text and ignore top/bottom margin and explicit height." },
+    { cat: "html", tag: "LIKELY", q: "What are data-* attributes and when do you use them?",
+      a: "They let you attach custom data to an element without breaking validation. I use them to pass small bits of state into event handlers instead of querying the DOM again for the same information.",
+      code: "<button data-user-id=\"42\">Delete</button>\n\n// JS\nbutton.addEventListener(\"click\", (e) => {\n  console.log(e.target.dataset.userId); // \"42\"\n});" },
+    { cat: "html", tag: "LIKELY", q: "What's the difference between async and defer on a script tag?",
+      a: "Both let the HTML parser continue without waiting for the script to download. async runs the script the instant it's downloaded, which can interrupt parsing and doesn't guarantee order between scripts. defer waits until parsing finishes and runs scripts in document order, which is the safer default for anything that touches the DOM." },
+    { cat: "html", tag: "CORE", q: "What's the difference between localStorage, sessionStorage, and cookies?",
+      a: "localStorage persists with no expiry until it's explicitly cleared, scoped per origin. sessionStorage behaves the same but clears when the tab closes. Cookies are much smaller, sent to the server with every HTTP request, and are the only one of the three that can auto-expire or be marked httpOnly for security." },
+    { cat: "html", tag: "CORE", q: "How do you make an image responsive?",
+      a: "The baseline rule is img { max-width: 100%; height: auto; } so it never overflows its container. For serving different resolutions to different screens, I use srcset and sizes so the browser picks the right file instead of downloading one oversized image everywhere." },
+    { cat: "html", tag: "CORE", q: "What does the meta viewport tag do, and why does it matter for responsive design?",
+      a: "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> tells mobile browsers to render the page at the device's actual width instead of a default desktop-width canvas zoomed out. Without it, every media query you write is effectively ignored on phones." },
+    { cat: "html", tag: "BONUS", q: "What are ARIA attributes?",
+      a: "They add accessibility information the browser and screen readers can use when native HTML doesn't already convey it — things like aria-label, aria-expanded, or role=\"dialog\" on a custom modal. The rule of thumb: use a native semantic element first, and only reach for ARIA when there isn't one." },
+
+    // ---------------- CSS3 & Responsive ----------------
+    { cat: "css", tag: "CORE", q: "Explain the CSS box model.",
+      a: "Every element is a box built from content, then padding, then border, then margin, from the inside out. Padding adds space inside the border, margin adds space outside it, and by default width/height apply only to the content box." },
+    { cat: "css", tag: "CORE", q: "content-box vs border-box — what's the difference?",
+      a: "content-box (the default) means width/height apply only to the content, so padding and border add extra size on top. border-box includes padding and border inside the given width/height, which is why most teams set box-sizing: border-box globally — it makes sizing predictable.",
+      code: "* {\n  box-sizing: border-box;\n}" },
+    { cat: "css", tag: "CORE", q: "Flexbox vs Grid — when do you use which?",
+      a: "Flexbox is one-dimensional — built for laying items out in a single row or column, like a navbar. Grid is two-dimensional — built for rows and columns together, like a full page layout or dashboard. In practice I use Grid for the page skeleton and Flexbox for the pieces inside it." },
+    { cat: "css", tag: "LIKELY", q: "How does CSS specificity work?",
+      a: "Specificity is a tuple of inline styles, IDs, classes/attributes/pseudo-classes, and elements. An ID beats any number of classes, and a class beats any number of elements. When two rules tie, the one later in the source wins. !important overrides all of that, which is exactly why I avoid it except as a last resort.",
+      code: "#nav .item { }         /* 0,1,1,0 */\n.nav .item.active { }  /* 0,0,3,0 */\n/* #nav still wins — an ID always beats classes, however many */" },
+    { cat: "css", tag: "CORE", q: "What are media queries, and how do you structure breakpoints?",
+      a: "Media queries apply CSS conditionally based on things like viewport width. I write mobile-first: base styles target small screens, then min-width queries layer on changes for larger ones — typically around 640-768px for tablets and 1024px+ for desktop.",
+      code: "/* mobile-first */\n.card {\n  display: block;\n}\n\n@media (min-width: 768px) {\n  .card {\n    display: flex;\n  }\n}" },
+    { cat: "css", tag: "LIKELY", q: "Mobile-first vs desktop-first — which do you prefer, and why?",
+      a: "Mobile-first means writing the simplest single-column layout first and adding complexity as the screen grows with min-width queries. I prefer it because it forces you to prioritize content, and it usually means less CSS gets overridden since you're adding rules rather than undoing them." },
+    { cat: "css", tag: "CORE", q: "Explain position: static, relative, absolute, fixed, and sticky.",
+      a: "static is the default flow. relative shifts an element without removing it from the flow. absolute removes it entirely and positions it against the nearest positioned ancestor. fixed positions against the viewport, so it stays put on scroll. sticky behaves like relative until a scroll threshold, then acts like fixed." },
+    { cat: "css", tag: "BONUS", q: "What is a stacking context, and how does z-index actually work?",
+      a: "z-index only has an effect on positioned elements (not static), and it only compares elements within the same stacking context. Properties like opacity below 1, transforms, or will-change create a new stacking context — which is why a z-index of 9999 can still lose to a lower one nested inside a different context." },
+    { cat: "css", tag: "LIKELY", q: "What are CSS custom properties, and why use them over Sass variables?",
+      a: "Custom properties (--primary: value) resolve in the browser at runtime, so they can be read and changed with JavaScript and overridden per component — unlike Sass variables, which are compiled away and fixed at build time. I use them heavily for theming, like a light/dark toggle.",
+      code: ":root {\n  --primary: #2563eb;\n}\n\n.btn {\n  background: var(--primary);\n}" },
+    { cat: "css", tag: "CORE", q: "Difference between em, rem, %, and vh/vw?",
+      a: "em is relative to the parent's font-size, so it compounds as you nest. rem is relative only to the root html font-size, which is more predictable for consistent spacing and type scales. % is relative to the parent's corresponding dimension. vh/vw are relative to 1% of the viewport's height/width." },
+    { cat: "css", tag: "CORE", q: "How would you center a div?",
+      a: "For a single item, the modern default is a flex container with align-items and justify-content set to center, or place-items: center on a grid parent. Position-and-transform is the fallback when you can't control the parent's display.",
+      code: ".center {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}" },
+    { cat: "css", tag: "LIKELY", q: "visibility: hidden vs display: none vs opacity: 0 — what's the difference?",
+      a: "display: none removes the element from layout entirely — no space, not in the accessibility tree. visibility: hidden keeps its space but hides it visually and from screen readers. opacity: 0 keeps it fully in the layout, visible to screen readers, and still clickable — a common bug source." },
+    { cat: "css", tag: "BONUS", q: "Explain the BEM naming convention.",
+      a: "BEM stands for Block, Element, Modifier: .card, .card__title, .card--featured. It keeps class names flat and self-documenting, so you can tell an element's role and its parent just by reading the class — which avoids the specificity wars that come from deeply nested selectors." },
+    { cat: "css", tag: "LIKELY", q: "How do you handle cross-browser compatibility?",
+      a: "I check caniuse.com before relying on a newer CSS feature, use Autoprefixer in the build pipeline for vendor prefixes, and actually test in real browsers rather than assuming — Safari in particular has its own quirks with flexbox and date inputs." },
+
+    // ---------------- JavaScript ----------------
+    { cat: "js", tag: "CORE", q: "var vs let vs const — what's the difference?",
+      a: "var is function-scoped and hoisted with a default of undefined, which causes bugs in loops and closures. let and const are block-scoped and sit in a temporal dead zone until their declaration line, so accessing them earlier throws instead of silently returning undefined. const just means the binding can't be reassigned — an object's own properties can still change." },
+    { cat: "js", tag: "CORE", q: "What is hoisting?",
+      a: "JavaScript moves function and variable declarations to the top of their scope before the code runs. Function declarations are hoisted fully, so you can call them above where they're written. var declarations are hoisted but only the declaration, not the assignment, so the variable is undefined until that line runs." },
+    { cat: "js", tag: "CORE", q: "Explain closures, with an example.",
+      a: "A closure is a function that remembers the variables from its outer scope even after that outer function has finished running. It's how you get private state in JavaScript.",
+      code: "function makeCounter() {\n  let count = 0;\n  return function () {\n    count += 1;\n    return count;\n  };\n}\n\nconst counter = makeCounter();\ncounter(); // 1\ncounter(); // 2 — count persisted between calls" },
+    { cat: "js", tag: "BONUS", q: "Explain the event loop.",
+      a: "JavaScript is single-threaded and runs code from the call stack. Async work like fetch or setTimeout is handed to the browser, and when it finishes, its callback joins a queue. The event loop only pulls from that queue once the call stack is empty. Promise callbacks (microtasks) always run before setTimeout callbacks (macrotasks), even if both are ready at once." },
+    { cat: "js", tag: "CORE", q: "== vs === — what's the difference?",
+      a: "=== checks value and type with no conversion. == coerces both sides to the same type first, which produces surprising results like '' == 0 being true. I default to === everywhere and only reach for == when I explicitly want null and undefined treated as equal." },
+    { cat: "js", tag: "CORE", q: "How do arrow functions handle `this` differently from regular functions?",
+      a: "A regular function gets its own `this`, determined by how it's called. An arrow function has no `this` of its own — it captures `this` from the enclosing scope at the time it's defined. That's why arrow functions are the right choice inside array callbacks, where you want `this` to stay bound to the surrounding context." },
+    { cat: "js", tag: "CORE", q: "Explain Promises — their states and methods.",
+      a: "A Promise represents a value that isn't ready yet. It starts pending and settles once, either fulfilled with a value or rejected with an error. .then() handles the fulfilled case, .catch() handles rejection, and .finally() runs regardless of outcome — useful for turning off a loading spinner either way." },
+    { cat: "js", tag: "CORE", q: "async/await vs .then() chains — which do you prefer?",
+      a: "async/await is syntactic sugar over Promises that lets asynchronous code read top-to-bottom like synchronous code, which makes error handling with a normal try/catch far easier to follow than a long .then().catch() chain. I use it by default and reach for raw Promise chaining when I want several requests running in parallel via Promise.all.",
+      code: "async function loadUser(id) {\n  try {\n    const res = await fetch(`/api/users/${id}`);\n    if (!res.ok) throw new Error(\"Request failed\");\n    return await res.json();\n  } catch (err) {\n    console.error(err);\n  }\n}" },
+    { cat: "js", tag: "LIKELY", q: "What is event delegation, and why use it?",
+      a: "Instead of attaching a listener to every child element, you attach one listener to a shared parent and check event.target inside it. It's more memory-efficient for long or dynamic lists, and it automatically works for elements added later without re-binding anything.",
+      code: "list.addEventListener(\"click\", (e) => {\n  if (e.target.matches(\"li\")) {\n    console.log(\"Clicked:\", e.target.textContent);\n  }\n});" },
+    { cat: "js", tag: "LIKELY", q: "null vs undefined — what's the difference?",
+      a: "undefined means a variable was declared but never assigned, or a function didn't return anything. null is an intentional assignment meaning 'no value' — you set it explicitly. typeof null is, famously, 'object', a long-standing quirk in the language." },
+    { cat: "js", tag: "LIKELY", q: "Explain destructuring.",
+      a: "Destructuring pulls values out of arrays or objects into individual variables in one line instead of accessing them one property at a time. It's especially common for pulling props out of a function argument in React.",
+      code: "const { name, age } = user;\nconst [first, second] = colors;" },
+    { cat: "js", tag: "LIKELY", q: "Explain the spread and rest operators.",
+      a: "Both use ..., in opposite directions. Spread expands an array or object into individual elements — copying an array with [...arr] or merging objects with {...a, ...b}. Rest gathers remaining arguments or items into a single array, like function sum(...nums) {}." },
+    { cat: "js", tag: "CORE", q: "map vs filter vs reduce vs forEach — what's the difference?",
+      a: "map returns a new array of the same length with each item transformed. filter returns a new array containing only items that pass a test. reduce folds the array down into a single value by running an accumulator function. forEach just runs a function per item and returns undefined, so it's for side effects, not building a new value." },
+    { cat: "js", tag: "LIKELY", q: "Explain debouncing and throttling.",
+      a: "Both limit how often a function runs in response to a fast-firing event like scroll or keystroke. Debounce waits until events stop for a set delay before running once — good for a search box that shouldn't fire an API call on every keystroke. Throttle runs at most once every set interval no matter how often the event fires — good for a scroll handler.",
+      code: "function debounce(fn, delay) {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}" },
+    { cat: "js", tag: "BONUS", q: "Explain prototypal inheritance.",
+      a: "Every object has an internal link to another object, its prototype, and property lookups walk up that chain until they find a match or hit null. Classes in JS are syntactic sugar over this same prototype mechanism, not a separate inheritance system like in Java." },
+    { cat: "js", tag: "CORE", q: "How do you select and manipulate DOM elements?",
+      a: "querySelector and querySelectorAll for reading elements with CSS-style selectors, classList.add/remove/toggle for classes, and createElement plus appendChild for building new nodes. In a React codebase you rarely touch the DOM directly — the framework does it for you — but it still matters for things like measuring an element or focusing an input." },
+    { cat: "js", tag: "BONUS", q: "What does 'use strict' do?",
+      a: "It opts a script or function into a stricter parsing mode that turns silent mistakes into thrown errors — assigning to an undeclared variable, duplicate parameter names, and a few other footguns. Modern JS modules and class bodies are strict by default, so you rarely need to write it explicitly anymore." },
+    { cat: "js", tag: "BONUS", q: "Promise.all vs Promise.race vs Promise.allSettled — what's the difference?",
+      a: "Promise.all waits for every promise to resolve and rejects immediately if any one rejects. Promise.race settles as soon as the first promise settles, whichever way. Promise.allSettled waits for all of them regardless of outcome and reports a status for each — useful when several independent requests shouldn't fail the whole batch." },
+
+    // ---------------- UI/UX Principles ----------------
+    { cat: "uiux", tag: "CORE", q: "What's the difference between UI and UX?",
+      a: "UI is the actual surface someone interacts with — buttons, colors, typography, layout. UX is the whole experience of using the product — whether the flow makes sense, whether they can find what they need, whether it feels effortless or frustrating. Good UI serves UX, but a beautiful UI can still sit on top of a confusing UX." },
+    { cat: "uiux", tag: "CORE", q: "What are the core principles of good UI design?",
+      a: "Consistency so patterns can be learned once and reused, clear visual hierarchy so the important thing is obvious first, immediate feedback for every action, and simplicity — removing anything that doesn't help the user complete their task." },
+    { cat: "uiux", tag: "LIKELY", q: "What is a design system, and why do teams use one?",
+      a: "A shared library of components, tokens (color, spacing, type scale), and usage rules that keep a product visually and behaviorally consistent as multiple people build it. It also speeds up development, since you're assembling from known parts instead of styling every button from scratch." },
+    { cat: "uiux", tag: "CORE", q: "How do you establish visual hierarchy?",
+      a: "Through size, weight, color contrast, and spacing — the most important element should be the biggest, boldest, or most isolated on the page. I use whitespace deliberately too: grouping related things close together and separating unrelated things, so structure is visible before you even read the text." },
+    { cat: "uiux", tag: "LIKELY", q: "What does accessibility (a11y) mean in front-end dev, and why does it matter?",
+      a: "It means the interface works for people using screen readers, keyboard-only navigation, or who need higher contrast — through sufficient color contrast, semantic HTML, visible focus states, and alt text on images. It matters both because it's the right thing to do and because in many contexts it's a legal requirement under WCAG." },
+    { cat: "uiux", tag: "LIKELY", q: "What's the difference between a wireframe, a mockup, and a prototype?",
+      a: "A wireframe is a low-fidelity skeleton focused purely on layout and structure, no color or real content. A mockup is high-fidelity — real colors, typography, and content, but static. A prototype is an interactive version you can click through to simulate the real flow before any code is written." },
+    { cat: "uiux", tag: "CORE", q: "How do you design for both mobile and desktop from one design?",
+      a: "I start from the smallest screen and design the essential version of the flow first, then progressively add layout complexity as space allows — a single column becomes a grid, a hamburger menu becomes a full nav bar. It forces prioritization: whatever survives the mobile version is genuinely essential." },
+    { cat: "uiux", tag: "LIKELY", q: "How would you improve the usability of a form?",
+      a: "Clear, persistent labels rather than placeholder-only fields, inline validation that tells you what's wrong before submit rather than after, a logical tab order, and grouping related fields together. Error messages should say exactly what to fix, not just that something's wrong." },
+    { cat: "uiux", tag: "BONUS", q: "What role does color contrast and typography play in readability?",
+      a: "WCAG recommends at least a 4.5:1 contrast ratio for normal body text so it's readable for people with low vision, and a clear type scale with enough line-height (usually 1.4-1.6x the font size) keeps long text from feeling cramped. Typography is functional, not just decorative — size and weight differences are what let someone scan a page instead of reading every word." },
+    { cat: "uiux", tag: "BONUS", q: "How do you incorporate user feedback into your design iterations?",
+      a: "I treat a first design as a hypothesis, not a final answer — watching a real user try to complete a task surfaces friction that's invisible once you already know how the interface is supposed to work. I prioritize feedback that blocks task completion over feedback that's purely aesthetic preference." },
+
+    // ---------------- REST APIs ----------------
+    { cat: "api", tag: "CORE", q: "What is a REST API?",
+      a: "An architectural style for APIs built around resources, identified by URLs, acted on using standard HTTP methods. It's stateless — the server doesn't remember anything about you between requests, so every request carries all the information needed to process it." },
+    { cat: "api", tag: "CORE", q: "What are the common HTTP methods and when do you use each?",
+      a: "GET to read data without side effects, POST to create a new resource, PUT to replace a resource entirely, PATCH to update part of a resource, and DELETE to remove one." },
+    { cat: "api", tag: "CORE", q: "What do the common HTTP status codes mean?",
+      a: "200 is a successful response, 201 means something was created, 204 means success with no content to return. 400 is a bad request from the client, 401 means you're not authenticated, 403 means authenticated but not authorized, 404 means the resource doesn't exist, and 500 means the server itself failed." },
+    { cat: "api", tag: "CORE", q: "fetch() vs Axios — what's the difference?",
+      a: "fetch is built into the browser, so no dependency, but it only rejects on a network failure — a 404 or 500 still resolves 'successfully', so you have to check response.ok yourself. Axios automatically rejects on bad status codes, parses JSON for you, supports interceptors, and makes canceling requests simpler. I reach for Axios on any real project for that convenience." },
+    { cat: "api", tag: "CORE", q: "How do you handle errors in an API call?",
+      a: "Wrap the call in try/catch with async/await, check response.ok since fetch doesn't throw on HTTP errors by itself, and surface a specific message to the user rather than a generic failure — then log the real error for debugging.",
+      code: "async function getUsers() {\n  try {\n    const res = await fetch(\"/api/users\");\n    if (!res.ok) throw new Error(`Status ${res.status}`);\n    return await res.json();\n  } catch (err) {\n    console.error(\"Failed to load users:\", err);\n    throw err;\n  }\n}" },
+    { cat: "api", tag: "LIKELY", q: "What is CORS, and why does it matter?",
+      a: "Cross-Origin Resource Sharing is a browser security rule that blocks a webpage from calling an API on a different origin unless that server explicitly allows it via response headers. It's a server-side setting, not something you fix from the front end — if you hit a CORS error, the backend team needs to add your origin to their allowed list." },
+    { cat: "api", tag: "BONUS", q: "How do you store and handle authentication tokens on the front end?",
+      a: "For a JWT, the safest common pattern is an httpOnly cookie set by the server, since JavaScript can't read it, which protects against XSS token theft. If the token has to be accessible to JS, I'd rather keep it in memory than in localStorage, since localStorage is readable by any script on the page, including an injected one." },
+    { cat: "api", tag: "CORE", q: "How do you show loading and error states while fetching data?",
+      a: "I model the request as three states — loading, error, and data — and render conditionally: a spinner or skeleton while loading is true, an error message if the request failed, and the real content once data arrives. In React that's usually a couple of useState calls or a small reducer." },
+    { cat: "api", tag: "LIKELY", q: "How would you implement pagination or infinite scroll?",
+      a: "For pagination, the API usually returns a page number/limit and a total count, and I track the current page in state and refetch on change. For infinite scroll, I use an IntersectionObserver on a sentinel element at the bottom of the list to load the next page as the user scrolls near it." },
+    { cat: "api", tag: "BONUS", q: "How do you cancel an in-flight request?",
+      a: "With fetch, an AbortController lets you pass a signal into the request and call controller.abort() to cancel it — useful in a search box where a new keystroke should cancel the previous request. Axios supports the same idea via its cancel token or the same AbortController signal." },
+    { cat: "api", tag: "LIKELY", q: "What is JSON, and why is it the standard for API data?",
+      a: "JavaScript Object Notation — a lightweight, language-independent text format for structured data. It maps directly onto JS objects and arrays via JSON.parse and JSON.stringify, and virtually every backend language can produce and consume it, which is why it replaced XML as the default for REST APIs." },
+    { cat: "api", tag: "BONUS", q: "REST vs GraphQL — do you know the difference?",
+      a: "REST exposes multiple fixed endpoints, one per resource, and you often either over-fetch or under-fetch data. GraphQL exposes a single endpoint where the client specifies exactly which fields it needs. I've primarily worked with REST, but understand the tradeoff and could ramp up on GraphQL if the role needed it." },
+
+    // ---------------- Integration & Workflow ----------------
+    { cat: "integration", tag: "CORE", q: "Walk me through integrating a new front-end screen with a backend API.",
+      a: "I start from the API contract or Postman/Swagger doc if one exists, build the UI first against a mock or hardcoded response so I'm not blocked, then swap in the real fetch/Axios call once the endpoint is live — matching field names and handling loading/error states from the start rather than bolting them on afterward." },
+    { cat: "integration", tag: "LIKELY", q: "How do you handle it when the API contract changes or doesn't match what was agreed?",
+      a: "I flag the mismatch directly to the backend developer with the specific request/response I'm seeing versus what was documented, rather than guessing and coding around it silently — a small mismatch in field naming can otherwise turn into a bug much later." },
+    { cat: "integration", tag: "LIKELY", q: "What do you use to test or mock an API before the backend is ready?",
+      a: "Postman to hit endpoints directly and check the shape of real responses, or a hardcoded JSON mock in the front end so I can build the UI in parallel with backend work instead of waiting on it." },
+    { cat: "integration", tag: "CORE", q: "How do you manage different API URLs across dev, staging, and production?",
+      a: "Environment variables — a .env file per environment, injected at build time — so the same code points at the right base URL automatically depending on where it's deployed, instead of hardcoding a URL and swapping it manually.",
+      code: "// .env.production\nVITE_API_URL=https://api.example.com\n\n// usage\nconst res = await fetch(`${import.meta.env.VITE_API_URL}/users`);" },
+    { cat: "integration", tag: "LIKELY", q: "How do you communicate an integration issue to backend developers?",
+      a: "I show, not just describe — a screenshot of the Network tab with the exact request payload, response status, and response body, so they can reproduce it immediately instead of going back and forth guessing what I sent." },
+    { cat: "integration", tag: "LIKELY", q: "Tell me about a time an API limitation forced you to change the UI.",
+      a: "Pick a real moment from your own work — an endpoint that didn't support the filtering or sorting you needed — and describe handling it client-side on the data you already had, then flagging it so the API could catch up later. Concrete beats abstract here." },
+
+    // ---------------- Dev Tools ----------------
+    { cat: "tools", tag: "CORE", q: "What's your typical Git workflow?",
+      a: "Pull the latest main, create a feature branch, commit in small logical chunks with clear messages, push the branch, and open a pull request for review before merging — I avoid committing directly to main." },
+    { cat: "tools", tag: "LIKELY", q: "git merge vs git rebase — what's the difference?",
+      a: "merge creates a new commit tying two branch histories together, preserving exactly what happened, branching structure included. rebase replays your commits on top of the latest main, producing a linear history with no merge commit. I use merge for shared branches and save rebase for cleaning up my own local branch before opening a PR." },
+    { cat: "tools", tag: "CORE", q: "How do you resolve a merge conflict?",
+      a: "Git marks the conflicting lines with <<<<<<<, =======, and >>>>>>> markers. I open the file, decide which version — or a combination — is correct, remove the markers, then stage and commit the resolved file." },
+    { cat: "tools", tag: "CORE", q: "What's a .gitignore file for?",
+      a: "It tells Git which files or folders to never track — node_modules, build output, .env files with secrets — so they don't get committed by accident and bloat the repo or leak credentials." },
+    { cat: "tools", tag: "CORE", q: "What's the difference between Visual Studio and VS Code?",
+      a: "Visual Studio is a full, heavyweight IDE, historically built for .NET, C++, and Windows desktop development, with built-in designers for WinForms/WPF. VS Code is a lightweight, open-source editor that becomes a full environment through extensions — it's what almost all modern web/front-end developers use day to day, myself included." },
+    { cat: "tools", tag: "LIKELY", q: "What VS Code extensions do you rely on?",
+      a: "ESLint and Prettier for consistent linting and formatting, GitLens to see history inline, and Tailwind CSS IntelliSense since I use Tailwind heavily — plus whatever framework-specific extension matches the project, like the ES7+ React snippets pack." },
+    { cat: "tools", tag: "CORE", q: "How do you debug JavaScript in the browser?",
+      a: "Chrome DevTools — setting breakpoints in the Sources tab, inspecting variable state as execution pauses, checking the Network tab for request/response details, and the Console for quick logging. For React specifically, the React DevTools extension to inspect component props and state directly." },
+    { cat: "tools", tag: "LIKELY", q: "Have you used Visual Studio for WinForms/WPF or other .NET UI work?",
+      a: "Be honest here: your hands-on experience is web-side — React, JavaScript, HTML/CSS — rather than WinForms or WPF specifically. Frame it as: comfortable in Visual Studio's editor, familiar with the general idea of XAML-based UI, and confident the underlying thinking — layout, data binding, componentization — transfers even where the syntax is new." },
+
+    // ---------------- Web vs Windows UI ----------------
+    { cat: "windows", tag: "CORE", q: "What's the difference between designing UI for a web browser vs a native Windows app?",
+      a: "A web UI has to work across every browser and an unpredictable range of screen sizes, and it's stateless between page loads unless you build state management yourself. A native Windows app runs in a fixed, controlled environment, has direct access to OS-level UI conventions like native menus and file dialogs, and generally performs faster and more predictably since there's no network round-trip for the UI itself." },
+    { cat: "windows", tag: "LIKELY", q: "Have you used WPF, WinForms, UWP, or Electron?",
+      a: "My direct project experience is web-based — React and JavaScript. I haven't shipped a WPF or WinForms app, but I understand the core ideas — XAML-based declarative UI, data binding, MVVM — and given my background building component-based UIs, I'd expect the ramp-up to be about syntax and platform APIs, not the underlying design thinking." },
+    { cat: "windows", tag: "LIKELY", q: "How does responsive design change when the 'viewport' is a resizable desktop window instead of a browser?",
+      a: "The same core idea — flexible layout that adapts to available space — still applies, but a desktop window is typically resized less aggressively and less often than a phone-vs-desktop swing, and you usually have a more predictable minimum window size to design against rather than an open-ended range of device widths." },
+    { cat: "windows", tag: "BONUS", q: "What is the Fluent Design System?",
+      a: "Microsoft's current design language for Windows apps — it defines conventions for depth, motion, translucent materials like acrylic and mica, and light/dark theming, similar in spirit to how Material Design defines conventions for Android and web." },
+    { cat: "windows", tag: "BONUS", q: "If asked to make a web dashboard feel more 'native' to Windows users, what would you think about?",
+      a: "Respecting the OS's light/dark theme preference automatically, using system fonts like Segoe UI rather than a web font, keeping scrollbars close to native behavior if it's wrapped in something like Electron, and matching Windows keyboard-shortcut conventions rather than Mac ones." },
+    { cat: "windows", tag: "BONUS", q: "Would you be comfortable using Electron to ship a web UI as a Windows desktop app?",
+      a: "Yes — it's the same React/JS/CSS skillset wrapped in a Chromium shell with Node for OS-level access, which is the most direct bridge from current web experience to a 'Windows application.' The tradeoff is a much larger bundle size and higher memory use than a native app, so it's worth it mainly when shipping the same UI to desktop and web matters more than raw performance." },
+
+    // ---------------- Behavioral & Projects ----------------
+    { cat: "behavioral", tag: "CORE", q: "Walk me through a recent project where you built a responsive, user-friendly interface.",
+      a: "The Tomoboshi Admin Dashboard is a strong example: built in React 19 with React Router DOM v7 for navigation, Mapbox GL JS for a live map view, and Axios for data fetching — deployed and live on Netlify. Worth mentioning why responsiveness mattered: it's an admin tool used across different screen sizes, not one fixed desktop monitor." },
+    { cat: "behavioral", tag: "LIKELY", q: "Tell me about a time integrating a front-end screen with an API didn't go smoothly.",
+      a: "Use a real story here — a field mismatch, a CORS surprise, an endpoint that returned something unexpected. Name the project, what broke, how you diagnosed it (Network tab, console errors), and what you changed. Interviewers care more about your debugging process than the specific bug." },
+    { cat: "behavioral", tag: "CORE", q: "Describe your role on the Dazk Cloud Analytics Platform.",
+      a: "Front-end work using React 19 and Vite, styled with Tailwind v4, with Framer Motion and Lenis handling the platform's animation and smooth-scroll behavior, alongside the AWS SDK for cloud-service integration." },
+    { cat: "behavioral", tag: "CORE", q: "How do you ensure your UI works well across screen sizes and devices?",
+      a: "I build mobile-first with Tailwind's responsive utility classes, test at real breakpoints in DevTools rather than only at my own monitor's size, and treat touch targets and tap spacing as a first-class concern, not an afterthought for mobile." },
+    { cat: "behavioral", tag: "LIKELY", q: "Tell me about a UI/UX decision you made and your reasoning.",
+      a: "Pick a specific, small decision — a layout choice, a form flow, a loading-state pattern — from one of your real projects. State the problem it solved and the alternative you rejected and why. Concrete beats abstract here." },
+    { cat: "behavioral", tag: "LIKELY", q: "How do you go from a Figma design to working code?",
+      a: "I read the design token by token — spacing, color, type scale — before writing any markup, so the build matches the intent rather than eyeballing pixel values, and I check the design's states (hover, disabled, error) that are often shown only once in the file but need to exist in every relevant component." },
+    { cat: "behavioral", tag: "LIKELY", q: "What was the most challenging bug you've fixed recently, and how did you debug it?",
+      a: "Pick a specific bug from your own recent work and walk through it in order: what you observed, what you checked first, what the actual root cause turned out to be, and what you changed to prevent it recurring. Structure beats detail — interviewers are grading your process, not just the punchline." },
+    { cat: "behavioral", tag: "CORE", q: "Why are you interested in this role, given it also touches Windows application UI?",
+      a: "Be honest that your direct experience is web-based, and frame the Windows-app angle as a genuine growth area rather than glossing over it — then pivot to what does transfer directly: component thinking, responsive layout discipline, and REST API integration, which are the skills the JD actually leads with." }
+  ];
+
+  const questions = RAW.map((item, i) => ({
+    ...item,
+    id: item.cat + "-" + i,
+    idLabel: item.cat.toUpperCase().slice(0, 3) + "-" + String(i + 1).padStart(2, "0")
+  }));
+
+  const catCounts = {};
+  questions.forEach(q => { catCounts[q.cat] = (catCounts[q.cat] || 0) + 1; });
+
+  let activeCat = "all";
+  let searchTerm = "";
+  const reviewed = new Set();
+
+  const tabsEl = document.getElementById("tabs");
+  const cardsEl = document.getElementById("cards");
+  const totalCountEl = document.getElementById("total-count");
+  const reviewedCountEl = document.getElementById("reviewed-count");
+  const searchInput = document.getElementById("search-input");
+
+  totalCountEl.textContent = questions.length;
+
+  function renderTabs() {
+    tabsEl.innerHTML = "";
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "tab-btn";
+      btn.style.setProperty("--cat-color", cat.color);
+      btn.setAttribute("aria-pressed", String(cat.id === activeCat));
+      const label = document.createElement("span");
+      label.textContent = cat.label;
+      const n = document.createElement("span");
+      n.className = "n";
+      n.textContent = cat.id === "all" ? questions.length : (catCounts[cat.id] || 0);
+      btn.appendChild(label);
+      btn.appendChild(n);
+      btn.addEventListener("click", () => {
+        activeCat = cat.id;
+        renderTabs();
+        renderCards();
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function matchesSearch(q, term) {
+    if (!term) return true;
+    const hay = (q.q + " " + q.a).toLowerCase();
+    return hay.includes(term);
+  }
+
+  function getVisible() {
+    return questions.filter(q =>
+      (activeCat === "all" || q.cat === activeCat) &&
+      matchesSearch(q, searchTerm)
+    );
+  }
+
+  function updateReviewedCount() {
+    reviewedCountEl.textContent = reviewed.size + " / " + questions.length + " reviewed";
+  }
+
+  function renderCards() {
+    const list = getVisible();
+    cardsEl.innerHTML = "";
+
+    if (list.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No questions match that search in this category.";
+      cardsEl.appendChild(empty);
+      return;
+    }
+
+    list.forEach(q => {
+      const card = document.createElement("article");
+      card.className = "card";
+      if (reviewed.has(q.id)) card.classList.add("reviewed");
+
+      const stamp = document.createElement("div");
+      stamp.className = "stamp";
+      stamp.textContent = "REVIEWED";
+      card.appendChild(stamp);
+
+      const header = document.createElement("button");
+      header.className = "card-header";
+      header.setAttribute("aria-expanded", "false");
+
+      const idSpan = document.createElement("span");
+      idSpan.className = "card-id";
+      idSpan.textContent = q.idLabel;
+
+      const qSpan = document.createElement("span");
+      qSpan.className = "card-q";
+      qSpan.textContent = q.q;
+
+      const tagSpan = document.createElement("span");
+      tagSpan.className = "tag tag-" + q.tag.toLowerCase();
+      tagSpan.textContent = q.tag;
+
+      const chev = document.createElement("span");
+      chev.className = "chevron";
+      chev.textContent = "›";
+
+      header.appendChild(idSpan);
+      header.appendChild(qSpan);
+      header.appendChild(tagSpan);
+      header.appendChild(chev);
+
+      const body = document.createElement("div");
+      body.className = "card-body";
+
+      const answerP = document.createElement("p");
+      answerP.textContent = q.a;
+      body.appendChild(answerP);
+
+      if (q.code) {
+        const pre = document.createElement("pre");
+        pre.className = "code-block";
+        const codeEl = document.createElement("code");
+        codeEl.textContent = q.code;
+        pre.appendChild(codeEl);
+        body.appendChild(pre);
+      }
+
+      const footer = document.createElement("div");
+      footer.className = "card-footer";
+      const stampBtn = document.createElement("button");
+      stampBtn.className = "stamp-btn";
+      stampBtn.textContent = reviewed.has(q.id) ? "Reviewed ✓" : "Mark reviewed";
+      stampBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (reviewed.has(q.id)) {
+          reviewed.delete(q.id);
+          card.classList.remove("reviewed");
+          stampBtn.textContent = "Mark reviewed";
+        } else {
+          reviewed.add(q.id);
+          card.classList.add("reviewed");
+          stampBtn.textContent = "Reviewed ✓";
+        }
+        updateReviewedCount();
+      });
+      footer.appendChild(stampBtn);
+      body.appendChild(footer);
+
+      header.addEventListener("click", () => {
+        const isOpen = card.classList.toggle("open");
+        header.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      card.appendChild(header);
+      card.appendChild(body);
+      cardsEl.appendChild(card);
+    });
+  }
+
+  searchInput.addEventListener("input", (e) => {
+    searchTerm = e.target.value.trim().toLowerCase();
+    renderCards();
+  });
+
+  document.getElementById("expand-all").addEventListener("click", () => {
+    document.querySelectorAll(".card").forEach(c => {
+      c.classList.add("open");
+      c.querySelector(".card-header").setAttribute("aria-expanded", "true");
+    });
+  });
+
+  document.getElementById("collapse-all").addEventListener("click", () => {
+    document.querySelectorAll(".card").forEach(c => {
+      c.classList.remove("open");
+      c.querySelector(".card-header").setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.getElementById("reset-progress").addEventListener("click", () => {
+    reviewed.clear();
+    updateReviewedCount();
+    renderCards();
+  });
+
+  renderTabs();
+  renderCards();
+  updateReviewedCount();
+})();
+</script>
+</body>
+</html>
