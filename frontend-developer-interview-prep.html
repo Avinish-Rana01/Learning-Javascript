@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Frontend Developer — Interview Field Manual</title>
+<script>
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,6 +30,30 @@
     --likely-fg: #6b4e1e;
     --bonus-bg: #dfe4e6;
     --bonus-fg: #45525a;
+    --tab-n-bg: rgba(255,255,255,0.15);
+    --code-bg: var(--ink);
+    --code-fg: #dce9e6;
+  }
+
+  [data-theme="dark"] {
+    --paper: #121212;
+    --paper-line: #2a2a2a;
+    --card: #1e1e1e;
+    --card-border: #333333;
+    --ink: #e0e0e0;
+    --ink-soft: #a0a0a0;
+    --teal: #4db8b3;
+    --teal-deep: #70d6d1;
+    --stamp: #e57373;
+    --core-bg: #e0e0e0;
+    --core-fg: #121212;
+    --likely-bg: #4a3614;
+    --likely-fg: #e9dcb5;
+    --bonus-bg: #2a343a;
+    --bonus-fg: #dfe4e6;
+    --tab-n-bg: rgba(0,0,0,0.15);
+    --code-bg: #000000;
+    --code-fg: #e0e0e0;
   }
 
   * { box-sizing: border-box; }
@@ -199,7 +229,7 @@
     color: var(--paper);
     border-color: var(--ink);
   }
-  .tab-btn[aria-pressed="true"] .n { background: rgba(255,255,255,0.15); color: var(--paper); }
+  .tab-btn[aria-pressed="true"] .n { background: var(--tab-n-bg); color: var(--paper); }
 
   /* ---------- Cards ---------- */
   .cards { display: flex; flex-direction: column; gap: 12px; }
@@ -262,8 +292,8 @@
   .card-body p { margin: 0 0 12px; font-size: 14px; color: var(--ink); }
 
   pre.code-block {
-    background: var(--ink);
-    color: #dce9e6;
+    background: var(--code-bg);
+    color: var(--code-fg);
     font-family: "IBM Plex Mono", monospace;
     font-size: 12.5px;
     padding: 12px 14px;
@@ -371,6 +401,7 @@
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="Search questions and answers…" aria-label="Search questions">
     </div>
+    <button class="btn" id="toggle-theme">Dark mode</button>
     <button class="btn" id="expand-all">Expand all</button>
     <button class="btn" id="collapse-all">Collapse all</button>
     <button class="btn" id="reset-progress">Reset progress</button>
@@ -799,6 +830,23 @@
     reviewed.clear();
     updateReviewedCount();
     renderCards();
+  });
+
+  const themeBtn = document.getElementById("toggle-theme");
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    themeBtn.textContent = "Light mode";
+  }
+  themeBtn.addEventListener("click", () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+      themeBtn.textContent = "Dark mode";
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+      themeBtn.textContent = "Light mode";
+    }
   });
 
   renderTabs();
